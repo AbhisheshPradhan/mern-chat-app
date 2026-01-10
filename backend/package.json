@@ -1,0 +1,29 @@
+{
+	"name": "backend",
+	"version": "1.0.0",
+	"description": "node server",
+	"homepage": "https://github.com/AbhisheshPradhan/mern-chat-app#readme",
+	"bugs": {
+		"url": "https://github.com/AbhisheshPradhan/mern-chat-app/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/AbhisheshPradhan/mern-chat-app.git"
+	},
+	"license": "ISC",
+	"author": "Abhishesh",
+	"type": "module",
+	"main": "src/server.ts",
+	"scripts": {
+		"dev": "tsx watch src/server.ts"
+	},
+	"devDependencies": {
+		"@types/express": "^5.0.6",
+		"tsx": "^4.21.0"
+	},
+	"dependencies": {
+		"dotenv": "^17.2.3",
+		"express": "^5.2.1",
+		"mongoose": "^9.1.2"
+	}
+}

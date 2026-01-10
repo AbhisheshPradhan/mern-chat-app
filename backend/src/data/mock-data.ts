@@ -1,0 +1,42 @@
+export const MOCK_USERS = [
+	{
+		id: "1",
+		username: "Alice Johnson",
+		email: "alice@example.com",
+		avatar: "https://ui-avatars.com/api/?name=Alice+Johnson&background=4F46E5&color=fff",
+		isOnline: true,
+		lastSeen: "",
+	},
+	{
+		id: "2",
+		username: "Bob Smith",
+		email: "bob@example.com",
+		avatar: "https://ui-avatars.com/api/?name=Bob+Smith&background=10B981&color=fff",
+		isOnline: true,
+		lastSeen: "",
+	},
+	{
+		id: "3",
+		username: "Carol Williams",
+		email: "carol@example.com",
+		avatar: "https://ui-avatars.com/api/?name=Carol+Williams&background=F59E0B&color=fff",
+		isOnline: false,
+		lastSeen: "",
+	},
+	{
+		id: "4",
+		username: "David Brown",
+		email: "david@example.com",
+		avatar: "https://ui-avatars.com/api/?name=David+Brown&background=EF4444&color=fff",
+		isOnline: false,
+		lastSeen: "",
+	},
+	{
+		id: "5",
+		username: "Emma Davis",
+		email: "emma@example.com",
+		avatar: "https://ui-avatars.com/api/?name=Emma+Davis&background=8B5CF6&color=fff",
+		isOnline: true,
+		lastSeen: "",
+	},
+];
