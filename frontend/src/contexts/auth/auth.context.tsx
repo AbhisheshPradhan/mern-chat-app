@@ -3,8 +3,8 @@ import type { LoginCredentials, User } from "../../types";
 
 interface AuthContextType {
 	user: User | null;
-	token: string | null;
 	login: (credentials: LoginCredentials) => Promise<void>;
+	signup: (credentials: LoginCredentials) => Promise<void>;
 	logout: () => Promise<void>;
 	isLoading: boolean;
 }

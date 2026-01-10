@@ -1,16 +1,22 @@
 import "dotenv/config";
-
 import express from "express";
+import cors from "cors";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 
 import routes from "./routes";
 
 const DB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.mongodb.net/${process.env.DB_NAME}?appName=${process.env.APP_NAME}`;
 
-// console.log("DB_URI:", DB_URI);
-
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
+app.use(
+	cors({
+		origin: process.env.CLIENT_URL,
+		credentials: true,
+	})
+);
 
 app.use("/api", routes);
 

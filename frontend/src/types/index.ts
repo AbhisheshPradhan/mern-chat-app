@@ -1,7 +1,6 @@
 export interface User {
 	id: string;
 	username: string;
-	email: string;
 	avatar?: string;
 	isOnline: boolean;
 	lastSeen?: Date;
@@ -17,11 +16,10 @@ export interface Message {
 }
 
 export interface LoginCredentials {
-	email: string;
+	username: string;
 	password: string;
 }
 
 export interface AuthResponse {
 	user: User;
-	token: string;
 }

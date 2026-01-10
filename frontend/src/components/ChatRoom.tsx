@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { messageAPI, userAPI } from "../services/api";
+import { messageAPI, userAPI } from "../services/services";
 import { useAuth } from "../contexts/auth/auth.context";
 import type { Message, User } from "../types";
 

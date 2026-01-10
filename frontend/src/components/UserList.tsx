@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { userAPI } from "../services/api";
+import { userAPI } from "../services/services";
 import type { User } from "../types";
 
 interface UserListProps {
