@@ -8,8 +8,6 @@ export const Chat = () => {
 		localStorage.getItem("selectedUserId") || null
 	);
 
-	console.log("Chat selectedUserId", selectedUserId);
-
 	const handleSelectUserId = (selectedUserId: string) => {
 		setSelectedUserId(selectedUserId);
 

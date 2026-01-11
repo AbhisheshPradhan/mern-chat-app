@@ -19,7 +19,6 @@ const getOrCreateConversation = async (req: AuthRequest, res: Response) => {
 			});
 
 		if (conversationRes) {
-			console.log("getOrCreateConversation already exists");
 			return res.status(200).json({
 				participants: conversationRes.participants,
 				messages: conversationRes.messages,
@@ -30,8 +29,6 @@ const getOrCreateConversation = async (req: AuthRequest, res: Response) => {
 			conversationKey,
 			participants: [loggedInUserId, receiverId],
 		});
-
-		console.log("getOrCreateConversation created new Conversation");
 
 		return res.status(201).json({
 			participants: createdConversationRes.participants,

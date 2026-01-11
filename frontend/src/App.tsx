@@ -1,13 +1,26 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
 import { Chat } from "./pages/Chat";
 import { DarkModeProvider } from "./contexts/dark-mode/dark-mode.provider";
 import { AuthProvider } from "./contexts/auth/auth.provider";
 import { useAuth } from "./contexts/auth/auth.context";
+import { socket } from "./socket";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
 	const { user, isLoading } = useAuth();
+
+	useEffect(() => {
+		if (user) {
+			socket.connect();
+
+			return () => {
+				socket.disconnect();
+			};
+		}
+	}, [user]);
 
 	if (isLoading) {
 		return (
@@ -17,7 +30,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 		);
 	}
 
-	return user ? <>{children}</> : <Navigate to="/" replace />;
+	return user ? (
+		<>{children}</>
+	) : (
+		<Navigate
+			to="/"
+			replace
+		/>
+	);
 }
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
@@ -31,7 +51,14 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 		);
 	}
 
-	return !user ? <>{children}</> : <Navigate to="/chat" replace />;
+	return !user ? (
+		<>{children}</>
+	) : (
+		<Navigate
+			to="/chat"
+			replace
+		/>
+	);
 }
 
 function App() {

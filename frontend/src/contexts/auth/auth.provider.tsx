@@ -15,7 +15,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		authAPI
 			.me()
 			.then((res) => {
-				console.log("me res", res);
 				setUser(res);
 			})
 			.catch(() => setUser(null))
@@ -26,7 +25,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		await authAPI
 			.login(credentials)
 			.then((res) => {
-				console.log("login res", res);
 				setUser(res.user);
 			})
 			.catch(() => setUser(null))

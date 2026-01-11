@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { conversationAPI, messageAPI, userAPI } from "../services/services";
 import { useAuth } from "../contexts/auth/auth.context";
 import type { Message, User } from "../types";
+import { socket } from "../socket";
 
 interface ChatRoomProps {
 	selectedUserId: string;
@@ -19,6 +20,22 @@ export const ChatRoom = ({ selectedUserId }: ChatRoomProps) => {
 	useEffect(() => {
 		loadMessages();
 		loadSelectedUser();
+
+		const handleNewMessage = (message: Message) => {
+			if (
+				currentUser?._id == message.receiverId &&
+				message.senderId == selectedUserId
+			) {
+				setMessages((prev) => [...prev, message]);
+			}
+		};
+
+		socket.on("private:message", handleNewMessage);
+
+		// Cleanup on unmount
+		return () => {
+			socket.off("private:message", handleNewMessage);
+		};
 	}, [selectedUserId]);
 
 	useEffect(() => {
@@ -59,13 +76,19 @@ export const ChatRoom = ({ selectedUserId }: ChatRoomProps) => {
 
 		try {
 			setIsSending(true);
-			const message = await messageAPI.sendMessage({
-				receiverId: selectedUserId,
-				content: newMessage.trim(),
-			});
-			console.log("handleSendMessage message", message);
-			setMessages((prev) => [...prev, message]);
-			setNewMessage("");
+			await messageAPI
+				.sendMessage({
+					receiverId: selectedUserId,
+					content: newMessage.trim(),
+				})
+				.then((message) => {
+					setMessages((prev) => [...prev, message]);
+					setNewMessage("");
+					socket.emit("private:message", {
+						receiverId: selectedUserId,
+						message,
+					} as { receiverId: string; message: Message });
+				});
 		} catch (error) {
 			console.error("Failed to send message:", error);
 		} finally {
@@ -73,7 +96,7 @@ export const ChatRoom = ({ selectedUserId }: ChatRoomProps) => {
 		}
 	};
 
-	const formatTime = (date: Date) => {
+	const formatTime = (date: string) => {
 		return new Date(date).toLocaleTimeString("en-US", {
 			hour: "numeric",
 			minute: "2-digit",

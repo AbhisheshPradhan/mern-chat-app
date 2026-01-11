@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import mongoose from "mongoose";
 
 import { Message } from "../models/message";
@@ -6,8 +6,6 @@ import { AuthRequest } from "../types";
 import Conversation from "../models/conversation";
 
 const sendMessage = async (req: AuthRequest, res: Response) => {
-	console.log("sendMessage req.body", req.body);
-
 	const session = await mongoose.startSession();
 	session.startTransaction();
 	try {
@@ -51,8 +49,6 @@ const sendMessage = async (req: AuthRequest, res: Response) => {
 		await session.commitTransaction();
 		session.endSession();
 		res.status(200).json(newMessage);
-
-		// when user sends message, trigger socket event for loading new message for receiver
 	} catch (error) {
 		await session.abortTransaction();
 		session.endSession();

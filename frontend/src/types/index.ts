@@ -12,7 +12,7 @@ export interface Message {
 	receiverId: string;
 	content: string;
 	isRead: boolean;
-	createdAt: Date;
+	createdAt: string;
 }
 
 export interface LoginCredentials {
