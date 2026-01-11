@@ -1,19 +1,24 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 
 import { User } from "../models/user";
+import { AuthRequest } from "../types";
 
-const getUsers = async (req: Request, res: Response) => {
-	console.log("getUsers");
+const getUsers = async (req: AuthRequest, res: Response) => {
 	try {
-		// const loggedInUserId = req.user._id;
+		const loggedInUserId = req.userId;
 
 		const filter = req.query.filter as string | undefined;
 
-		const query = filter
-			? { username: { $regex: filter, $options: "i" } }
-			: {};
+		const query = {
+			_id: { $ne: loggedInUserId },
+			...(filter && {
+				username: { $regex: filter, $options: "i" },
+			}),
+		};
 
-		const users = await User.find(query).select("-password");
+		const users = await User.find(query).select(
+			"_id username avatar isOnline"
+		);
 
 		res.status(200).json(users);
 	} catch (error) {

@@ -134,9 +134,7 @@ export const authAPI = {
 	},
 
 	logout: async (): Promise<void> => {
-		const response = await api.post("/auth/logout", {
-			credentials: "include",
-		});
+		const response = await api.post("/auth/logout");
 
 		return response.data;
 	},
@@ -144,8 +142,13 @@ export const authAPI = {
 
 export const userAPI = {
 	getUsers: async (): Promise<User[]> => {
-		await delay(500);
-		return MOCK_USERS;
+		console.log("getUsers");
+		const response = await api.get("/users", {
+			withCredentials: true,
+		});
+
+		console.log("response.data ", response.data);
+		return response.data;
 	},
 
 	searchUsers: async (query: string): Promise<User[]> => {
