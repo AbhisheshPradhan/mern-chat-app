@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 import { User } from "../models/user";
+import { AuthRequest } from "../types";
 
 const login = async (req: Request, res: Response) => {
 	const { username, password } = req.body;
@@ -28,7 +29,11 @@ const login = async (req: Request, res: Response) => {
 		secure: process.env.NODE_ENV === "production",
 		sameSite: "strict",
 	});
-	res.status(200).json({ username, avatar: user.avatar });
+	res.status(200).json({
+		_id: user._id,
+		username,
+		avatar: user.avatar,
+	});
 };
 
 const signUp = async (req: Request, res: Response) => {
@@ -57,7 +62,11 @@ const signUp = async (req: Request, res: Response) => {
 			secure: process.env.NODE_ENV === "production",
 			sameSite: "strict",
 		});
-		res.status(201).json({ username, avatar: createdUser.avatar });
+		res.status(201).json({
+			_id: createdUser._id,
+			username,
+			avatar: createdUser.avatar,
+		});
 	} catch (error) {
 		console.error("Error in signUp: ", error.message);
 		res.status(500).json({ error: "Internal server error" });
@@ -74,7 +83,7 @@ const logout = async (req: Request, res: Response) => {
 	res.status(200).json({ message: "Logged out" });
 };
 
-const me = async (req, res) => {
+const me = async (req: AuthRequest, res: Response) => {
 	let userId = req.userId;
 	const user = await User.findById(userId).select("username avatar");
 	res.json(user);

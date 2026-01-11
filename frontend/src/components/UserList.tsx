@@ -96,10 +96,10 @@ export const UserList = ({ selectedUserId, onSelectUser }: UserListProps) => {
 					<div className="divide-y divide-gray-200 dark:divide-gray-700">
 						{users.map((user) => (
 							<button
-								key={user.id}
-								onClick={() => onSelectUser(user.id)}
+								key={user._id}
+								onClick={() => onSelectUser(user._id)}
 								className={`w-full p-4 flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition ${
-									selectedUserId === user.id
+									selectedUserId === user._id
 										? "bg-indigo-50 dark:bg-indigo-900/20"
 										: ""
 								}`}

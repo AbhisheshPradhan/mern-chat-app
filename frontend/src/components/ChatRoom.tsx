@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { messageAPI, userAPI } from "../services/services";
+import { conversationAPI, messageAPI, userAPI } from "../services/services";
 import { useAuth } from "../contexts/auth/auth.context";
 import type { Message, User } from "../types";
 
@@ -32,8 +32,10 @@ export const ChatRoom = ({ selectedUserId }: ChatRoomProps) => {
 	const loadMessages = async () => {
 		try {
 			setIsLoading(true);
-			const data = await messageAPI.getMessages(selectedUserId);
-			setMessages(data);
+			const data = await conversationAPI.getOrCreateConversation(
+				selectedUserId
+			);
+			setMessages(data.messages);
 		} catch (error) {
 			console.error("Failed to load messages:", error);
 		} finally {
@@ -44,7 +46,7 @@ export const ChatRoom = ({ selectedUserId }: ChatRoomProps) => {
 	const loadSelectedUser = async () => {
 		try {
 			const users = await userAPI.getUsers();
-			const user = users.find((u) => u.id === selectedUserId);
+			const user = users.find((u) => u._id === selectedUserId);
 			setSelectedUser(user || null);
 		} catch (error) {
 			console.error("Failed to load user:", error);
@@ -57,10 +59,11 @@ export const ChatRoom = ({ selectedUserId }: ChatRoomProps) => {
 
 		try {
 			setIsSending(true);
-			const message = await messageAPI.sendMessage(
-				selectedUserId,
-				newMessage.trim()
-			);
+			const message = await messageAPI.sendMessage({
+				receiverId: selectedUserId,
+				content: newMessage.trim(),
+			});
+			console.log("handleSendMessage message", message);
 			setMessages((prev) => [...prev, message]);
 			setNewMessage("");
 		} catch (error) {
@@ -158,10 +161,10 @@ export const ChatRoom = ({ selectedUserId }: ChatRoomProps) => {
 					<>
 						{messages.map((message) => {
 							const isOwnMessage =
-								message.senderId === currentUser?.id;
+								message.senderId === currentUser?._id;
 							return (
 								<div
-									key={message.id}
+									key={message._id}
 									className={`flex ${
 										isOwnMessage
 											? "justify-end"
@@ -185,7 +188,7 @@ export const ChatRoom = ({ selectedUserId }: ChatRoomProps) => {
 													: "text-gray-500 dark:text-gray-400"
 											}`}
 										>
-											{formatTime(message.timestamp)}
+											{formatTime(message.createdAt)}
 										</p>
 									</div>
 								</div>

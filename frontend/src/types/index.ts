@@ -1,5 +1,5 @@
 export interface User {
-	id: string;
+	_id: string;
 	username: string;
 	avatar?: string;
 	isOnline: boolean;
@@ -7,12 +7,12 @@ export interface User {
 }
 
 export interface Message {
-	id: string;
+	_id: string;
 	senderId: string;
 	receiverId: string;
 	content: string;
-	timestamp: Date;
-	read: boolean;
+	isRead: boolean;
+	createdAt: Date;
 }
 
 export interface LoginCredentials {

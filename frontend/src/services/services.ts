@@ -112,15 +112,12 @@ export const authAPI = {
 	login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
 		const response = await api.post("/auth/login", credentials);
 
-		console.log("login response", response);
-
 		return { user: response.data };
 	},
 
 	signUp: async (credentials: LoginCredentials): Promise<AuthResponse> => {
 		const response = await api.post("/auth/signup", credentials);
 
-		console.log("signup response", response);
 		return { user: response.data };
 	},
 
@@ -129,7 +126,6 @@ export const authAPI = {
 			credentials: "include",
 		});
 
-		console.log("me response", response.data);
 		return response.data;
 	},
 
@@ -142,12 +138,10 @@ export const authAPI = {
 
 export const userAPI = {
 	getUsers: async (): Promise<User[]> => {
-		console.log("getUsers");
 		const response = await api.get("/users", {
 			withCredentials: true,
 		});
 
-		console.log("response.data ", response.data);
 		return response.data;
 	},
 
@@ -160,32 +154,39 @@ export const userAPI = {
 	},
 };
 
-export const messageAPI = {
-	getMessages: async (userId: string): Promise<Message[]> => {
-		await delay(500);
-		return MOCK_MESSAGES[userId] || [];
+export const conversationAPI = {
+	getOrCreateConversation: async (
+		selectedUserId: string
+	): Promise<{ participants: string[]; messages: Message[] }> => {
+		const response = await api.post(
+			"/conversations",
+			{
+				receiverId: selectedUserId,
+			},
+			{ withCredentials: true }
+		);
+
+		return response.data;
 	},
+};
 
-	sendMessage: async (
-		receiverId: string,
-		content: string
-	): Promise<Message> => {
-		await delay(300);
-		const newMessage: Message = {
-			id: "m" + Date.now(),
-			senderId: "current-user",
-			receiverId,
-			content,
-			timestamp: new Date(),
-			read: false,
-		};
+export const messageAPI = {
+	sendMessage: async ({
+		receiverId,
+		content,
+	}: {
+		receiverId: string;
+		content: string;
+	}): Promise<Message> => {
+		const response = await api.post(
+			"/messages",
+			{
+				receiverId,
+				content,
+			},
+			{ withCredentials: true }
+		);
 
-		// Add to mock data for persistence during session
-		if (!MOCK_MESSAGES[receiverId]) {
-			MOCK_MESSAGES[receiverId] = [];
-		}
-		MOCK_MESSAGES[receiverId].push(newMessage);
-
-		return newMessage;
+		return response.data;
 	},
 };

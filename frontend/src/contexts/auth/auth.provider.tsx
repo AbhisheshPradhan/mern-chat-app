@@ -14,19 +14,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 	useEffect(() => {
 		authAPI
 			.me()
-			.then((res) => setUser(res))
+			.then((res) => {
+				console.log("me res", res);
+				setUser(res);
+			})
 			.catch(() => setUser(null))
 			.finally(() => setIsLoading(false));
 	}, []);
 
 	const login = async (credentials: LoginCredentials) => {
-		const response = await authAPI.login(credentials);
-		setUser(response.user);
+		await authAPI
+			.login(credentials)
+			.then((res) => {
+				console.log("login res", res);
+				setUser(res.user);
+			})
+			.catch(() => setUser(null))
+			.finally(() => setIsLoading(false));
 	};
 
 	const signup = async (credentials: LoginCredentials) => {
-		const response = await authAPI.signUp(credentials);
-		setUser(response.user);
+		await authAPI
+			.signUp(credentials)
+			.then((res) => {
+				setUser(res.user);
+			})
+			.catch(() => setUser(null))
+			.finally(() => setIsLoading(false));
 	};
 
 	const logout = async () => {
@@ -35,7 +49,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 	};
 
 	return (
-		<AuthContext.Provider value={{ user, login, signup, logout, isLoading }}>
+		<AuthContext.Provider
+			value={{ user, login, signup, logout, isLoading }}
+		>
 			{children}
 		</AuthContext.Provider>
 	);
