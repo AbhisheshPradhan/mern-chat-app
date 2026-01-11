@@ -22,10 +22,7 @@ export const ChatRoom = ({ selectedUserId }: ChatRoomProps) => {
 		loadSelectedUser();
 
 		const handleNewMessage = (message: Message) => {
-			if (
-				currentUser?._id == message.receiverId &&
-				message.senderId == selectedUserId
-			) {
+			if (message.senderId == selectedUserId) {
 				setMessages((prev) => [...prev, message]);
 			}
 		};
